@@ -8,20 +8,11 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 
 const CustomTreeItem = ({ item, onContextMenu }) => {
-  // This handles when we ctrl+click on any item its link opens in new window
-  const handleCtrlClick = (event) => {
-    if (event.ctrlKey && item?.url) {
-      event.preventDefault();
-      window.open(item.url, "_blank");
-    }
-  };
-
   return (
     <TreeItem
       itemId={item.nodeId}
       label={item.label}
       onContextMenu={(event) => onContextMenu(event, item)}
-      onClick={handleCtrlClick}
     >
       {item.children &&
         item.children.map((child) => (
@@ -42,8 +33,14 @@ const CustomTreeView = ({ data }) => {
   const handleContextMenu = (event, item) => {
     event.preventDefault();
     event.stopPropagation();
-    setMenuPosition({ mouseX: event.clientX, mouseY: event.clientY });
-    setSelectedItem(item);
+
+    // Ensureing it's a right-click (button 2) and Ctrl (Windows/Linux) or Cmd (Mac) is pressed
+    if ((event.ctrlKey || event.metaKey) && event.button === 2 && item?.url) {
+      window.open(item.url, "_blank");
+    } else {
+      setMenuPosition({ mouseX: event.clientX, mouseY: event.clientY });
+      setSelectedItem(item);
+    }
   };
 
   const handleClose = () => {
