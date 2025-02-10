@@ -34,12 +34,16 @@ const CustomTreeView = ({ data }) => {
     event.preventDefault();
     event.stopPropagation();
 
-    // Ensureing it's a right-click (button 2) and Ctrl (Windows/Linux) or Cmd (Mac) is pressed
-    if ((event.ctrlKey || event.metaKey) && event.button === 2 && item?.url) {
-      window.open(item.url, "_blank");
-    } else {
-      setMenuPosition({ mouseX: event.clientX, mouseY: event.clientY });
-      setSelectedItem(item);
+    // Only apply behavior to leaf nodes (nodes without children)
+    if (!item.children || item.children.length === 0) {
+      // Ctrl+Right Click (Cmd+Right Click on Mac) opens link in new tab
+      if ((event.ctrlKey || event.metaKey) && event.button === 2 && item?.url) {
+        window.open(item.url, "_blank");
+      } else {
+        // Regular right-click opens the custom menu
+        setMenuPosition({ mouseX: event.clientX, mouseY: event.clientY });
+        setSelectedItem(item);
+      }
     }
   };
 
