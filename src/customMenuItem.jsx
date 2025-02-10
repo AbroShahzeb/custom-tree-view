@@ -14,6 +14,7 @@ const CustomTreeItem = ({ item, onContextMenu }) => {
       label={item.label}
       onContextMenu={(event) => onContextMenu(event, item)}
     >
+      {/* Recursively generating Tree Items until there are no children left */}
       {item.children &&
         item.children.map((child) => (
           <CustomTreeItem
@@ -34,7 +35,7 @@ const CustomTreeView = ({ data }) => {
     event.preventDefault();
     event.stopPropagation();
 
-    // Only apply behavior to leaf nodes (nodes without children)
+    // Applying behavior only to leaf nodes (nodes without children)
     if (!item.children || item.children.length === 0) {
       // Ctrl+Right Click (Cmd+Right Click on Mac) opens link in new tab
       if ((event.ctrlKey || event.metaKey) && event.button === 2 && item?.url) {
@@ -54,7 +55,7 @@ const CustomTreeView = ({ data }) => {
 
   const handleOpen = (event) => {
     if (selectedItem?.url) {
-      window.open(selectedItem.url, "_blank"); // Open in a new tab
+      window.open(selectedItem.url, "_blank"); // Opening the URL in new window
     }
     handleClose();
   };
@@ -74,7 +75,7 @@ const CustomTreeView = ({ data }) => {
         ))}
       </SimpleTreeView>
 
-      {/* This is our open menu */}
+      {/* Menu with only on item "Open" */}
       <Menu
         open={!!menuPosition}
         onClose={handleClose}
